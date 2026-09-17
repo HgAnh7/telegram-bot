@@ -71,7 +71,7 @@ async def choose_song(callback: CallbackQuery):
         f"🎵 {song['name']}\n\n"
         f"👤 {song['artistName']}\n\n"
         "Chọn chất lượng:",
-        reply_markup=quality_keyboard()
+        reply_markup=quality_keyboard(song)
     )
 
 
@@ -98,7 +98,7 @@ async def quality_choose(callback: CallbackQuery):
     stream_url = None
 
     for stream in song["streamURL"]:
-        if stream["type"] == quality:
+        if stream["type"] == quality and stream["status"] == 1:
             stream_url = stream["download"]
             break
 
