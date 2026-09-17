@@ -26,6 +26,9 @@ async def nct_search(message: Message):
         return
 
     data = search_music(keyword, 10)
+    if not data:
+        await message.answer("🚫 Không thể kết nối tới NhacCuaTui, thử lại sau.")
+        return None
 
     songs = data["data"]["songs"]
 
