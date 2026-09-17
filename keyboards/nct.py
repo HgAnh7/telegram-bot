@@ -19,9 +19,21 @@ def songs_keyboard(songs):
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
-def quality_keyboard():
-    return InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text="128K", callback_data="quality_128"),
-        InlineKeyboardButton(text="320K", callback_data="quality_320"),
-        InlineKeyboardButton(text="Lossless", callback_data="quality_lossless"),
-    ]])
+QUALITY_LABELS = {"128": "128K", "320": "320K", "lossless": "Lossless"}
+def quality_keyboard(song, allow_vip=False):
+    buttons = []
+
+    for stream in song["streamURL"]:
+        if stream["status"] != 1:
+            continue
+        if stream["onlyVIP"] and not allow_vip:
+            continue
+
+        buttons.append(
+            InlineKeyboardButton(
+                text=QUALITY_LABELS.get(stream["type"], stream["type"]),
+                callback_data=f"quality_{stream['type']}"
+            )
+        )
+
+    return InlineKeyboardMarkup(inline_keyboard=[buttons])
