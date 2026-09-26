@@ -111,7 +111,8 @@ async def quality_choose(callback: CallbackQuery):
             show_alert=True
         )
         return
-
+        
+    await callback.message.delete()
     await callback.answer("⏳ Đang gửi nhạc...")
 
     await callback.message.answer_document(
