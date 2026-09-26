@@ -10,6 +10,7 @@ router = Router()
 
 songs_cache = {}
 selected_songs = {}
+original_messages = {}
 
 
 @router.message(Command("nct"))
@@ -112,12 +113,12 @@ async def quality_choose(callback: CallbackQuery):
         )
         return
         
-    #await callback.message.delete()
-    await callback.answer("⏳ Đang gửi nhạc...")
     await callback.message.delete()
+    await callback.answer("⏳ Đang gửi nhạc...")
+    #await callback.message.delete()
 
     await callback.message.answer_document(
         document=stream_url,
-        title=song["name"],
-        performer=song["artistName"]
+        #title=song["name"],
+        #performer=song["artistName"]
     )
