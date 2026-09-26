@@ -10,7 +10,7 @@ router = Router()
 
 songs_cache = {}
 selected_songs = {}
-original_messages = {}
+#original_messages = {}
 
 
 @router.message(Command("nct"))
@@ -29,7 +29,7 @@ async def nct_search(message: Message):
     data = search_music(keyword, 10)
     if not data:
         await message.answer("🚫 Không thể kết nối tới NhacCuaTui, thử lại sau.")
-        return None
+        return
 
     songs = data["data"]["songs"]
 
@@ -100,7 +100,6 @@ async def quality_choose(callback: CallbackQuery):
 
     # Tìm URL tương ứng với chất lượng
     stream_url = None
-
     for stream in song["streamURL"]:
         if stream["type"] == quality and stream["status"] == 1:
             stream_url = stream["download"]
@@ -115,7 +114,6 @@ async def quality_choose(callback: CallbackQuery):
         
     await callback.message.delete()
     await callback.answer("⏳ Đang gửi nhạc...")
-    #await callback.message.delete()
 
     await callback.message.answer_document(
         document=stream_url,
