@@ -112,8 +112,9 @@ async def quality_choose(callback: CallbackQuery):
         )
         return
         
-    await callback.message.delete()
+    #await callback.message.delete()
     await callback.answer("⏳ Đang gửi nhạc...")
+    await callback.message.delete()
 
     await callback.message.answer_document(
         document=stream_url,
