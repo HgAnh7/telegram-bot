@@ -20,7 +20,7 @@ def quality_keyboard(song, allow_vip=False):
     for stream in song.get("streamURL", []):
         if stream.get("status") != 1:
             continue
-        if stream.get("onlyVIP") and not allow_vip:
+        #if stream.get("onlyVIP") and not allow_vip:
             continue
         qualities.append(stream["type"])
 
