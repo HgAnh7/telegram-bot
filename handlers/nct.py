@@ -1,3 +1,4 @@
+import aiohttp
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
@@ -14,7 +15,7 @@ selected_songs = {}
 
 
 @router.message(Command("nct"))
-async def nct_search(message: Message):
+async def nct_search(message: Message, http: aiohttp.ClientSession):
 
     keyword = message.text.replace("/nct", "").strip()
 
@@ -112,7 +113,7 @@ async def quality_choose(callback: CallbackQuery):
         )
         return
         
-    await callback.message.delete()
+    
     await callback.answer("⏳ Đang gửi nhạc...")
 
     await callback.message.answer_document(
@@ -120,3 +121,5 @@ async def quality_choose(callback: CallbackQuery):
         #title=song["name"],
         #performer=song["artistName"]
     )
+    await callback.message.delete()
+
