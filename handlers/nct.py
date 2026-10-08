@@ -66,6 +66,7 @@ async def choose_song(callback: CallbackQuery):
         return
 
     song = songs[index - 1]
+    print(song["streamURL"]) ####
 
     # Lưu bài hát mà user đã chọn
     selected_songs[callback.from_user.id] = song
