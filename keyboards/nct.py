@@ -14,14 +14,10 @@ def songs_keyboard(songs):
     return kb.as_markup()
 
 
-def quality_keyboard(song, allow_vip=False):
+def quality_keyboard(song):
     qualities = []
 
     for stream in song.get("streamURL", []):
-        if stream.get("status") != 1:
-            continue
-        #if stream.get("onlyVIP") and not allow_vip:
-            continue
         qualities.append(stream["type"])
 
     if not qualities:
