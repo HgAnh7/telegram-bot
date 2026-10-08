@@ -1,39 +1,39 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 BUTTONS_PER_ROW = 5
+QUALITY_LABELS = {"128": "128K", "320": "320K", "lossless": "Lossless"}
 
 
 def songs_keyboard(songs):
-    buttons = []
-    row = []
+    kb = InlineKeyboardBuilder()
 
     for index in range(1, len(songs) + 1):
-        row.append(InlineKeyboardButton(text=str(index), callback_data=f"nct_song_{index}"))
-        if len(row) == BUTTONS_PER_ROW:
-            buttons.append(row)
-            row = []
+        kb.button(text=str(index), callback_data=f"nct_song_{index}")
 
-    if row:
-        buttons.append(row)
-
-    return InlineKeyboardMarkup(inline_keyboard=buttons)
+    kb.adjust(BUTTONS_PER_ROW)
+    return kb.as_markup()
 
 
-QUALITY_LABELS = {"128": "128K", "320": "320K", "lossless": "Lossless"}
 def quality_keyboard(song, allow_vip=False):
-    buttons = []
+    qualities = []
 
-    for stream in song["streamURL"]:
-        if stream["status"] != 1:
+    for stream in song.get("streamURL", []):
+        if stream.get("status") != 1:
             continue
-        if stream["onlyVIP"] and not allow_vip:
+        if stream.get("onlyVIP") and not allow_vip:
             continue
+        qualities.append(stream["type"])
 
-        buttons.append(
-            InlineKeyboardButton(
-                text=QUALITY_LABELS.get(stream["type"], stream["type"]),
-                callback_data=f"quality_{stream['type']}"
-            )
+    if not qualities:
+        return None
+
+    kb = InlineKeyboardBuilder()
+
+    for quality in qualities:
+        kb.button(
+            text=QUALITY_LABELS.get(quality, quality),
+            callback_data=f"quality_{quality}",
         )
 
-    return InlineKeyboardMarkup(inline_keyboard=[buttons])
+    kb.adjust(len(qualities))
+    return kb.as_markup()
