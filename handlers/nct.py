@@ -108,7 +108,7 @@ async def quality_choose(callback: CallbackQuery):
     # Tìm URL tương ứng với chất lượng
     stream_url = None
     for stream in song["streamURL"]:
-        if stream["type"] == quality and stream["status"] == 1:
+        if stream["type"] == quality:
             stream_url = stream["download"]
             break
 
