@@ -1,25 +1,26 @@
-import requests
+import asyncio
+import logging
 
+import aiohttp
 
 NCT_API = "https://graph.nhaccuatui.com/api/v1/search/song"
-TIMEOUT = 10
+TIMEOUT = aiohttp.ClientTimeout(total=10)
 
-def search_music(keyword, pagesize=10):
+log = logging.getLogger(__name__)
 
+
+async def search_music(session, keyword, pagesize=10):
     params = {
         "keyword": keyword,
-        "pageindex": "1",
+        "pageindex": 1,
         "pagesize": pagesize,
         "correct": "true",
     }
 
     try:
-        response = requests.post(
-            NCT_API,
-            params=params,
-            timeout=TIMEOUT
-        )
-        
-        return response.json()
-    except:
+        async with session.post(NCT_API, params=params, timeout=TIMEOUT) as response:
+            response.raise_for_status()
+            return await response.json(content_type=None)
+    except (aiohttp.ClientError, asyncio.TimeoutError, ValueError):
+        log.exception("NCT search failed: %s", keyword)
         return None
