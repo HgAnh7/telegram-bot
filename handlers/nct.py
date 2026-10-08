@@ -27,7 +27,7 @@ async def nct_search(message: Message, http: aiohttp.ClientSession):
         )
         return
 
-    data = search_music(keyword, 10)
+    data = await search_music(http, keyword, 10)
     if not data:
         await message.answer("🚫 Không thể kết nối tới NhacCuaTui, thử lại sau.")
         return
@@ -71,6 +71,11 @@ async def choose_song(callback: CallbackQuery):
     selected_songs[callback.from_user.id] = song
 
     await callback.answer()
+
+    keyboard = quality_keyboard(song)
+    if keyboard is None:
+        await callback.message.answer("❌ Bài này không có link tải.")
+        return
 
     await callback.message.edit_text(
         f"🎵 {song['name']}\n\n"
